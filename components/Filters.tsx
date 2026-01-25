@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useState, useCallback } from 'react';
 import type { SearchResult } from '@/lib/types';
 
 interface FiltersProps {
@@ -9,6 +9,7 @@ interface FiltersProps {
   selectedType: string | null;
   onOperatorChange: (operator: string | null) => void;
   onTypeChange: (type: string | null) => void;
+  onRadiusSearch?: (near: string, radius: number, type: string | null) => void;
 }
 
 export default function Filters({
@@ -16,8 +17,11 @@ export default function Filters({
   selectedOperator,
   selectedType,
   onOperatorChange,
-  onTypeChange
+  onTypeChange,
+  onRadiusSearch
 }: FiltersProps) {
+  const [editRadius, setEditRadius] = useState<number | null>(null);
+
   const sortedOperators = useMemo(() => {
     if (!searchResult?.stats.operators) return [];
     return Object.entries(searchResult.stats.operators)
@@ -125,9 +129,30 @@ export default function Filters({
               </div>
             )}
             {searchResult.query.near && (
-              <div className="query-param">
+              <div className="query-param radius-param">
                 <span className="param-key">radius</span>
-                <span className="param-value">{searchResult.query.radius}km</span>
+                <div className="radius-input-wrapper">
+                  <input
+                    type="number"
+                    className="radius-input"
+                    value={editRadius ?? searchResult.query.radius}
+                    onChange={(e) => setEditRadius(Math.max(1, Math.min(500, parseInt(e.target.value) || 50)))}
+                    min={1}
+                    max={500}
+                  />
+                  <span className="radius-unit">km</span>
+                  {editRadius !== null && editRadius !== searchResult.query.radius && onRadiusSearch && (
+                    <button
+                      className="radius-apply"
+                      onClick={() => {
+                        onRadiusSearch(searchResult.query.near!, editRadius, searchResult.query.type);
+                        setEditRadius(null);
+                      }}
+                    >
+                      Apply
+                    </button>
+                  )}
+                </div>
               </div>
             )}
           </div>

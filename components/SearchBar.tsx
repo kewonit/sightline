@@ -9,11 +9,11 @@ interface SearchBarProps {
 }
 
 const EXAMPLE_QUERIES = [
-  'telecom towers in karnataka',
-  'power plants near mumbai',
-  'data centers in california',
-  'airports in germany',
-  'type:substation region:texas'
+  'airports near london',
+  'hospitals in paris',
+  'power plants in texas',
+  'train stations in tokyo',
+  'type:university region:california'
 ];
 
 export default function SearchBar({ onSearch, loading, initialQuery = '' }: SearchBarProps) {
@@ -74,7 +74,7 @@ export default function SearchBar({ onSearch, loading, initialQuery = '' }: Sear
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onFocus={() => setShowExamples(true)}
-            placeholder='Search infrastructure... (press "/" to focus)'
+            placeholder="Search infrastructure..."
             className="search-input"
             disabled={loading}
             autoComplete="off"
@@ -83,7 +83,6 @@ export default function SearchBar({ onSearch, loading, initialQuery = '' }: Sear
           {loading && (
             <div className="search-spinner" />
           )}
-          <kbd className="search-kbd">/</kbd>
         </div>
       </form>
 

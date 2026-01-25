@@ -12,6 +12,8 @@ const MapView = dynamic(() => import('@/components/MapView'), {
   loading: () => <div className="map-loading">Loading map...</div>
 });
 
+type MobileTab = 'map' | 'results' | 'filters';
+
 export default function Home() {
   const [searchResult, setSearchResult] = useState<SearchResult | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -19,6 +21,7 @@ export default function Home() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [filterOperator, setFilterOperator] = useState<string | null>(null);
   const [filterType, setFilterType] = useState<string | null>(null);
+  const [mobileTab, setMobileTab] = useState<MobileTab>('map');
 
   const handleSearch = useCallback(async (query: string) => {
     setLoading(true);
@@ -55,6 +58,13 @@ export default function Home() {
   const handleSelect = useCallback((id: string) => {
     setSelectedId(prev => prev === id ? null : id);
   }, []);
+
+  const handleRadiusSearch = useCallback((near: string, radius: number, type: string | null) => {
+    const query = type 
+      ? `type:${type} near:${near.replace(/\s+/g, '_')} radius:${radius}`
+      : `near:${near.replace(/\s+/g, '_')} radius:${radius}`;
+    handleSearch(query);
+  }, [handleSearch]);
 
   return (
     <div className="app-container">
@@ -93,31 +103,68 @@ export default function Home() {
       )}
 
       <main className="app-main">
-        <Filters
-          searchResult={searchResult}
-          selectedOperator={filterOperator}
-          selectedType={filterType}
-          onOperatorChange={setFilterOperator}
-          onTypeChange={setFilterType}
-        />
+        <div className={`panel-filters ${mobileTab === 'filters' ? 'mobile-active' : ''}`}>
+          <Filters
+            searchResult={searchResult}
+            selectedOperator={filterOperator}
+            selectedType={filterType}
+            onOperatorChange={setFilterOperator}
+            onTypeChange={setFilterType}
+            onRadiusSearch={handleRadiusSearch}
+          />
+        </div>
         
-        <ResultList
-          results={searchResult?.results || []}
-          selectedId={selectedId}
-          onSelect={handleSelect}
-          filterOperator={filterOperator}
-          filterType={filterType}
-        />
+        <div className={`panel-results ${mobileTab === 'results' ? 'mobile-active' : ''}`}>
+          <ResultList
+            results={searchResult?.results || []}
+            selectedId={selectedId}
+            onSelect={handleSelect}
+            filterOperator={filterOperator}
+            filterType={filterType}
+          />
+        </div>
         
-        <MapView
-          results={searchResult?.results || []}
-          bounds={searchResult?.bounds || null}
-          selectedId={selectedId}
-          onSelect={handleSelect}
-          filterOperator={filterOperator}
-          filterType={filterType}
-        />
+        <div className={`panel-map ${mobileTab === 'map' ? 'mobile-active' : ''}`}>
+          <MapView
+            results={searchResult?.results || []}
+            bounds={searchResult?.bounds || null}
+            selectedId={selectedId}
+            onSelect={handleSelect}
+            filterOperator={filterOperator}
+            filterType={filterType}
+          />
+        </div>
       </main>
+
+      <nav className="mobile-nav">
+        <button 
+          className={`mobile-nav-btn ${mobileTab === 'map' ? 'active' : ''}`}
+          onClick={() => setMobileTab('map')}
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l5.447 2.724A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+          </svg>
+          <span>Map</span>
+        </button>
+        <button 
+          className={`mobile-nav-btn ${mobileTab === 'results' ? 'active' : ''}`}
+          onClick={() => setMobileTab('results')}
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+          <span>Results{searchResult ? ` (${searchResult.stats.total})` : ''}</span>
+        </button>
+        <button 
+          className={`mobile-nav-btn ${mobileTab === 'filters' ? 'active' : ''}`}
+          onClick={() => setMobileTab('filters')}
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+          </svg>
+          <span>Filters</span>
+        </button>
+      </nav>
     </div>
   );
 }
