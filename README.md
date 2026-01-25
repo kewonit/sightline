@@ -18,46 +18,35 @@ Sightline enables searching, monitoring, and analyzing real-world infrastructure
 
 ## Architecture
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                        Frontend                              │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌─────────────┐ │
-│  │ SearchBar│  │ Filters  │  │ResultList│  │   MapView   │ │
-│  └────┬─────┘  └────┬─────┘  └────┬─────┘  │ (Leaflet.js)│ │
-│       │             │             │        └──────┬──────┘ │
-└───────┼─────────────┼─────────────┼───────────────┼────────┘
-        │             │             │               │
-        └─────────────┴──────┬──────┴───────────────┘
-                             │
-                    POST /api/search
-                             │
-┌────────────────────────────┼────────────────────────────────┐
-│                        Backend                               │
-│                            │                                 │
-│  ┌─────────────────────────▼─────────────────────────────┐  │
-│  │                    route.ts                            │  │
-│  └─────────────────────────┬─────────────────────────────┘  │
-│                            │                                 │
-│         ┌──────────────────┼──────────────────┐             │
-│         │                  │                  │             │
-│  ┌──────▼──────┐   ┌───────▼───────┐   ┌─────▼─────┐       │
-│  │  parser.ts  │   │    geo.ts     │   │overpass.ts│       │
-│  │   (NLP)     │   │  (Nominatim)  │   │  (OSM)    │       │
-│  └─────────────┘   └───────────────┘   └───────────┘       │
-│                                                              │
-│  ┌─────────────────────────────────────────────────────────┐ │
-│  │                     cache.ts                             │ │
-│  └─────────────────────────────────────────────────────────┘ │
-└──────────────────────────────────────────────────────────────┘
-                             │
-                             ▼
-         ┌───────────────────────────────────────┐
-         │           External APIs               │
-         │  ┌─────────────┐  ┌────────────────┐  │
-         │  │  Nominatim  │  │  Overpass API  │  │
-         │  │  (Geocoding)│  │  (OSM Data)    │  │
-         │  └─────────────┘  └────────────────┘  │
-         └───────────────────────────────────────┘
+```mermaid
+flowchart TB
+    subgraph Frontend
+        SearchBar
+        Filters
+        ResultList
+        MapView["MapView (Leaflet.js)"]
+    end
+
+    subgraph Backend
+        route["route.ts"]
+        parser["parser.ts (NLP)"]
+        geo["geo.ts (Nominatim)"]
+        overpass["overpass.ts (OSM)"]
+        cache["cache.ts"]
+    end
+
+    subgraph External["External APIs"]
+        Nominatim["Nominatim (Geocoding)"]
+        OverpassAPI["Overpass API (OSM Data)"]
+    end
+
+    SearchBar & Filters & ResultList & MapView -->|POST /api/search| route
+    route --> parser
+    route --> geo
+    route --> overpass
+    route --> cache
+    geo --> Nominatim
+    overpass --> OverpassAPI
 ```
 
 ## Data Sources
