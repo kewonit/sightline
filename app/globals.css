@@ -347,12 +347,6 @@ body {
   pointer-events: none;
 }
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 .search-examples {
   position: absolute;
   top: calc(100% + 4px);
@@ -525,7 +519,7 @@ body {
 
 .app-main {
   display: grid;
-  grid-template-columns: 240px 1fr 45%; /* Filters, Results (55%), Map (45%) */
+  grid-template-columns: 240px 1fr 45%;
   flex: 1;
   overflow: hidden;
 }
@@ -547,13 +541,13 @@ body {
   overflow-x: hidden;
   padding: 16px 0;
   height: 100%;
-  min-height: 0; /* Required for scroll in grid/flex context */
-  scrollbar-width: none !important; /* Firefox */
-  -ms-overflow-style: none !important; /* IE/Edge */
+  min-height: 0;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
 }
 
 .filters-panel::-webkit-scrollbar {
-  display: none !important; /* Chrome/Safari/Opera */
+  display: none !important;
   width: 0 !important;
   height: 0 !important;
 }
@@ -779,28 +773,24 @@ body {
   font-family: ui-monospace, SFMono-Regular, monospace;
 }
 
-/* ScrollArea wrapper - takes full flex space */
 .results-list-scroll {
   flex: 1;
   min-height: 0;
 }
 
-/* Hide native scrollbar in ScrollArea viewport */
 .results-list-scroll [data-radix-scroll-area-viewport] {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE/Edge */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 .results-list-scroll [data-radix-scroll-area-viewport]::-webkit-scrollbar {
-  display: none; /* Chrome/Safari/Opera */
+  display: none;
 }
 
-/* Content inside ScrollArea viewport */
 .results-list-content {
   padding: 8px;
 }
 
-/* Legacy class preserved for backwards compatibility */
 .results-list {
   flex: 1;
   overflow-y: auto;
@@ -984,10 +974,6 @@ body {
   color: var(--text-secondary) !important;
 }
 
-/* =============================================================================
-   LAYER CONTROL STYLING
-   ============================================================================= */
-
 .leaflet-control-layers {
   background: var(--bg-secondary) !important;
   border: 1px solid var(--border-primary) !important;
@@ -1076,7 +1062,6 @@ body {
   gap: 6px !important;
 }
 
-/* Custom radio button styling */
 .leaflet-control-layers-selector {
   appearance: none !important;
   -webkit-appearance: none !important;
@@ -1121,7 +1106,6 @@ body {
   margin: 6px 8px !important;
 }
 
-/* Mobile touch-friendly adjustments */
 @media (max-width: 768px) {
   .leaflet-control-layers {
     border-radius: 10px !important;
@@ -1153,7 +1137,6 @@ body {
   }
 }
 
-/* Reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
   .leaflet-control-layers-toggle,
   .leaflet-control-layers-base label,
@@ -1400,16 +1383,6 @@ body {
   background: var(--bg-hover);
 }
 
-/* ============================================
-   RESPONSIVE BREAKPOINTS
-   - xl: > 1280px (Large desktops)
-   - lg: 1024px - 1280px (Small desktops/laptops)
-   - md: 768px - 1024px (Tablets)
-   - sm: 480px - 768px (Large phones/small tablets)
-   - xs: < 480px (Mobile phones)
-   ============================================ */
-
-/* Large Desktop (xl) - 3 column layout: Filters + Results (55%) | Map (45%) */
 @media (min-width: 1280px) {
   .app-main {
     grid-template-columns: 280px 1fr 45%;
@@ -1420,10 +1393,9 @@ body {
   }
 }
 
-/* Small Desktop/Laptop (lg) - 3 column layout with smaller filters */
 @media (max-width: 1279px) and (min-width: 1025px) {
   .app-main {
-    grid-template-columns: 200px 1fr 45%; /* Filters (smaller), Results (55%), Map (45%) */
+    grid-template-columns: 200px 1fr 45%;
   }
 
   .header-link-text {
@@ -1435,7 +1407,6 @@ body {
   }
 }
 
-/* Mobile + Tablet (sm + md) - Single column with bottom navigation */
 @media (max-width: 1024px) {
   .app-header {
     padding: 0 12px;
@@ -1476,7 +1447,7 @@ body {
   }
 
   .search-input {
-    font-size: 16px; /* Prevents iOS zoom on focus */
+    font-size: 16px;
     height: 40px;
   }
 
@@ -1520,7 +1491,6 @@ body {
     position: relative;
   }
 
-  /* Allow map popups to overflow */
   .panel-map.mobile-active {
     overflow: visible;
   }
@@ -1531,7 +1501,7 @@ body {
     border: none;
     width: 100%;
     overflow-y: auto;
-    min-height: 0; /* Important for flex scroll */
+    min-height: 0;
   }
 
   .panel-map.mobile-active .map-container {
@@ -1645,7 +1615,6 @@ body {
     overflow-y: auto;
   }
 
-  /* Query debug section on mobile */
   .query-debug {
     font-size: 14px;
   }
@@ -1659,7 +1628,6 @@ body {
     margin-top: 4px;
   }
 
-  /* Map popup adjustments for mobile */
   .dark-popup .leaflet-popup-content-wrapper {
     max-width: calc(100vw - 60px) !important;
     width: calc(100vw - 60px) !important;
@@ -1738,7 +1706,6 @@ body {
     word-break: break-all;
   }
 
-  /* Leaflet popup positioning for mobile */
   .leaflet-popup {
     margin-bottom: 20px;
     z-index: 10000 !important;
@@ -1748,7 +1715,6 @@ body {
     z-index: 10000 !important;
   }
 
-  /* Leaflet controls on mobile */
   .leaflet-control-zoom {
     margin-right: 8px !important;
     margin-top: 8px !important;
@@ -1762,7 +1728,6 @@ body {
   }
 }
 
-/* Extra small mobile (xs) */
 @media (max-width: 480px) {
   .app-header {
     height: 48px;
@@ -1847,7 +1812,6 @@ body {
   }
 }
 
-/* Landscape mobile orientation */
 @media (max-width: 768px) and (orientation: landscape) {
   .app-header {
     height: 44px;
@@ -1880,7 +1844,6 @@ body {
   }
 }
 
-/* Touch device optimizations */
 @media (hover: none) and (pointer: coarse) {
   .filter-item {
     min-height: 44px;
@@ -1900,7 +1863,6 @@ body {
     min-height: 48px;
   }
 
-  /* Larger touch targets for map controls */
   .leaflet-control-zoom a {
     width: 40px !important;
     height: 40px !important;
