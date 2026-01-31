@@ -1283,6 +1283,32 @@ body {
   border-radius: 8px;
   color: var(--text-primary);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+}
+
+.dark-popup .leaflet-popup-content {
+  margin: 12px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-primary) transparent;
+}
+
+.dark-popup .leaflet-popup-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.dark-popup .leaflet-popup-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.dark-popup .leaflet-popup-content::-webkit-scrollbar-thumb {
+  background: var(--border-primary);
+  border-radius: 3px;
+}
+
+.dark-popup .leaflet-popup-content::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
 }
 
 .dark-popup .leaflet-popup-tip-container {
@@ -1307,7 +1333,9 @@ body {
 
 .map-popup {
   min-width: 200px;
+  max-width: 280px;
   font-size: 14px;
+  line-height: 1.4;
 }
 
 .popup-title {
@@ -1344,28 +1372,37 @@ body {
   font-size: 14px;
   margin-bottom: 8px;
   border-collapse: collapse;
-  table-layout: fixed;
 }
 
 .popup-tags td {
-  padding: 2px 0;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
+  padding: 4px 0;
+  vertical-align: top;
 }
 
 .popup-key {
   color: var(--text-muted);
-  padding-right: 8px;
+  padding-right: 12px;
   font-family: ui-monospace, SFMono-Regular, monospace;
   white-space: nowrap;
-  width: 80px;
-  vertical-align: top;
+  font-size: 12px;
 }
 
 .popup-value {
   color: var(--text-secondary);
-  word-break: break-word;
-  overflow-wrap: break-word;
+  word-break: break-all;
+  overflow-wrap: anywhere;
+  hyphens: auto;
+  max-width: 180px;
+}
+
+.popup-value a {
+  color: var(--accent);
+  text-decoration: none;
+  word-break: break-all;
+}
+
+.popup-value a:hover {
+  text-decoration: underline;
 }
 
 .popup-osm-link {

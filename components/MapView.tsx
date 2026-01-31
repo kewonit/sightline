@@ -32,6 +32,21 @@ function escapeHtml(text: string): string {
   return div.innerHTML;
 }
 
+/** URL regex pattern for detecting links in text */
+const URL_PATTERN = /^https?:\/\/[^\s]+$/i;
+
+/**
+ * Formats a value for display in popup, converting URLs to clickable links.
+ * All output is XSS-safe.
+ */
+function formatPopupValue(value: string): string {
+  const safeValue = escapeHtml(value);
+  if (URL_PATTERN.test(value)) {
+    return `<a href="${safeValue}" target="_blank" rel="noopener noreferrer">${safeValue}</a>`;
+  }
+  return safeValue;
+}
+
 /** Base layer configuration interface */
 interface LayerConfig {
   readonly url: string;
@@ -466,10 +481,10 @@ export default function MapView({
     const safeOperator = asset.operator ? escapeHtml(asset.operator) : null;
 
     const tags = Object.entries(asset.tags)
-      .slice(0, 5)
+      .slice(0, 8)
       .map(
         ([k, v]) =>
-          `<tr><td class="popup-key">${escapeHtml(k)}</td><td class="popup-value">${escapeHtml(String(v))}</td></tr>`,
+          `<tr><td class="popup-key">${escapeHtml(k)}</td><td class="popup-value">${formatPopupValue(String(v))}</td></tr>`,
       )
       .join("");
 
